@@ -8,10 +8,10 @@
 
 #import "ACSimpleKeychain.h"
 
-NSString const* ACKeychainPassword      = @"password";
-NSString const* ACKeychainUsername      = @"username";
-NSString const* ACKeychainIdentifier    = @"identifier";
-NSString const* ACKeychainService       = @"service";
+NSString *const ACKeychainPassword      = @"password";
+NSString *const ACKeychainUsername      = @"username";
+NSString *const ACKeychainIdentifier    = @"identifier";
+NSString *const ACKeychainService       = @"service";
 
 @interface ACSimpleKeychain (Private)
 

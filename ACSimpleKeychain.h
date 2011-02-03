@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 
-extern NSString const* ACKeychainPassword;
-extern NSString const* ACKeychainUsername;
-extern NSString const* ACKeychainIdentifier;
-extern NSString const* ACKeychainService;
+extern NSString *const ACKeychainPassword;
+extern NSString *const ACKeychainUsername;
+extern NSString *const ACKeychainIdentifier;
+extern NSString *const ACKeychainService;
 
 @interface ACSimpleKeychain : NSObject {
     
