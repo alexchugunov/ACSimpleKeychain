@@ -17,7 +17,7 @@ Storing credentials:
     // Replace user2 with user3
     if ([keychain storePassword:@"password" username:@"user3" identifier:@"account2" forService:@"twitter"]) {
         NSLog(@"CHANGED credentials for credentials identifier 'account2'");
-    }
+    }    
 
 Retrieving credentials:
     // Request all credentials for service 'twitter' (max 99 entries)
@@ -25,13 +25,20 @@ Retrieving credentials:
     NSLog(@"All credentials for service 'twitter %@", all);
 
     // Request credentials for account with username 'user1'
-    NSDictionary *user1 = [keychain credentialsForUsername:@"user1" service:@"twitter"];
-    NSLog(@"CREDENTIALS for user 'user1': %@", user1);
+    NSDictionary *credentials = [keychain credentialsForUsername:@"user1" service:@"twitter"];
+    NSLog(@"CREDENTIALS: service: %@, identifier: %@, username: %@, password: %@",
+        [credentials valueForKey:ACKeychainService],
+        [credentials valueForKey:ACKeychainIdentifier],
+        [credentials valueForKey:ACKeychainUsername],
+        [credentials valueForKey:ACKeychainPassword]);
 
     // Request credentials for account with identifier 'account2'
-    NSDictionary *account2 = [keychain credentialsForIdentifier:@"account2" service:@"twitter"];
-    NSLog(@"CREDENTIALS for identifier 'account2': %@", account2);
-
+    credentials = [keychain credentialsForIdentifier:@"account2" service:@"twitter"];
+    NSLog(@"CREDENTIALS: service: %@, identifier: %@, username: %@, password: %@",
+        [credentials valueForKey:ACKeychainService],
+        [credentials valueForKey:ACKeychainIdentifier],
+        [credentials valueForKey:ACKeychainUsername],
+        [credentials valueForKey:ACKeychainPassword]);
 
 Deleting credentials:
     // Delete credentials for account with identifier 'account1'
@@ -46,5 +53,5 @@ Deleting credentials:
 
     // Delete all account for service MobileMe
     if ([keychain deleteAllCredentialsForService:@"MobileMe"]) {
-        NSLog(@"DELTED credentials for service 'MobileMe');
+        NSLog(@"DELTED all credentials for service 'MobileMe'");
     }
