@@ -1,0 +1,50 @@
+Dead simple keychain wrapper for iOS.
+
+Initialization:
+    ACSimpleKeychain *keychain = [ACSimpleKeychain defaultKeychain];
+
+Storing credentials:
+    // Save credentials for user1
+    if ([keychain storePassword:@"password" username:@"user1" identifier:@"account1" forService:@"twitter"]) {
+        NSLog(@"SAVED credentials for username 'user1' credentials identifier 'account1'");
+    }
+
+    // Save credentials for user2
+    if ([keychain storePassword:@"password" username:@"user2" identifier:@"account2" forService:@"twitter"]) {
+        NSLog(@"SAVED credentials for username 'user2' credentials identifier 'account2'");
+    }
+
+    // Replace user2 with user3
+    if ([keychain storePassword:@"password" username:@"user3" identifier:@"account2" forService:@"twitter"]) {
+        NSLog(@"CHANGED credentials for credentials identifier 'account2'");
+    }
+
+Retrieving credentials:
+    // Request all credentials for service 'twitter' (max 99 entries)
+    NSArray *all = [keychain allCredentialsForService:@"twitter" limit:99];
+    NSLog(@"All credentials for service 'twitter %@", all);
+
+    // Request credentials for account with username 'user1'
+    NSDictionary *user1 = [keychain credentialsForUsername:@"user1" service:@"twitter"];
+    NSLog(@"CREDENTIALS for user 'user1': %@", user1);
+
+    // Request credentials for account with identifier 'account2'
+    NSDictionary *account2 = [keychain credentialsForIdentifier:@"account2" service:@"twitter"];
+    NSLog(@"CREDENTIALS for identifier 'account2': %@", account2);
+
+
+Deleting credentials:
+    // Delete credentials for account with identifier 'account1'
+    if ([keychain deleteCredentialsForIdentifier:@"account1" service:@"twitter"]) {
+        NSLog(@"DELETED credentials for 'account1'");
+    }
+
+    // Request credentials for account with username 'user3'
+    if ([keychain deleteCredentialsForUsername:@"user3" service:@"twitter"]) {
+        NSLog(@"DELETED credentials for 'user3'");
+    }
+
+    // Delete all account for service MobileMe
+    if ([keychain deleteAllCredentialsForService:@"MobileMe"]) {
+        NSLog(@"DELTED credentials for service 'MobileMe');
+    }
