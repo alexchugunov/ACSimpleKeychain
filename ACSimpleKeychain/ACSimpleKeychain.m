@@ -8,10 +8,13 @@
 
 #import "ACSimpleKeychain.h"
 
-NSString *const ACKeychainPassword      = @"password";
-NSString *const ACKeychainUsername      = @"username";
-NSString *const ACKeychainIdentifier    = @"identifier";
-NSString *const ACKeychainService       = @"service";
+NSString *const ACKeychainPassword          = @"password";
+NSString *const ACKeychainUsername          = @"username";
+NSString *const ACKeychainIdentifier        = @"identifier";
+NSString *const ACKeychainExpirationDate    = @"expirationDate";
+NSString *const ACKeychainService           = @"service";
+
+NSString *const ACKeychainMisc              = @"misc";
 
 @interface ACSimpleKeychain (Private)
 
@@ -48,35 +51,61 @@ NSString *const ACKeychainService       = @"service";
 {
     NSString *username = [[NSString alloc] initWithData:[item valueForKey:(__bridge id)kSecAttrAccount]
                                                encoding:NSUTF8StringEncoding];
-    NSString *password = [[NSString alloc] initWithData:[item valueForKey:(__bridge id)kSecValueData]
-                                               encoding:NSUTF8StringEncoding];
     NSString *identifier = [[NSString alloc] initWithData:[item valueForKey:(__bridge id)kSecAttrGeneric]
                                                  encoding:NSUTF8StringEncoding];
     NSString *service = [[NSString alloc] initWithData:[item valueForKey:(__bridge id)kSecAttrService]
                                               encoding:NSUTF8StringEncoding];
+    NSData *passwordData = [item valueForKey:(__bridge id)kSecValueData];
     
-    NSDictionary *credentials = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 username, ACKeychainUsername,
-                                 password, ACKeychainPassword,
-                                 identifier, ACKeychainIdentifier,
-                                 service, ACKeychainService, nil];
+    NSString *password = nil;
+    if (passwordData) {
+        password = [[NSString alloc] initWithData:passwordData
+                                         encoding:NSUTF8StringEncoding];    
+    }
+    
+    NSData *miscData = [item valueForKey:(__bridge id)kSecAttrComment];
+    NSDictionary *misc = nil;
+    
+    if (miscData) {
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:miscData];
+        misc = [unarchiver decodeObjectForKey:ACKeychainMisc];
+        [unarchiver finishDecoding];
+    }
+    
+    NSMutableDictionary *credentials = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                        username, ACKeychainUsername,
+                                        identifier, ACKeychainIdentifier,
+                                        service, ACKeychainService, nil];
+    [credentials setValue:password forKey:ACKeychainPassword];
+    [credentials setValue:[misc valueForKey:ACKeychainExpirationDate] forKey:ACKeychainExpirationDate];
 
     return credentials;
 }
 
 - (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier forService:(NSString *)service
 {
+    return [self storePassword:password username:username identifier:identifier expirationDate:nil forService:service];
+}
+
+- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service
+{
     if ([self deleteCredentialsForUsername:username service:service] &&
         [self deleteCredentialsForIdentifier:identifier service:service])
     {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                            (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
-                                           [password dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecValueData,
                                            [username dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrAccount,
                                            [identifier dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrGeneric,
-                                           [service dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrService,
-                                           nil];
-        
+                                           [service dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrService, nil];
+        [dictionary setValue:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+        NSMutableDictionary *misc = [NSMutableDictionary dictionary];
+        [misc setValue:expirationDate forKey:ACKeychainExpirationDate];
+
+        NSMutableData *miscData = [NSMutableData data];
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:miscData];
+        [archiver encodeObject:misc forKey:ACKeychainMisc];
+        [archiver finishEncoding];
+        [dictionary setValue:miscData forKey:(__bridge id)kSecAttrComment];
         OSStatus status = SecItemAdd((__bridge CFDictionaryRef)dictionary, NULL);
         return (status == errSecSuccess);
     }

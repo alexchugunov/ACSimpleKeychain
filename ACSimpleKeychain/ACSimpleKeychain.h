@@ -13,6 +13,7 @@ extern NSString *const ACKeychainPassword;
 extern NSString *const ACKeychainUsername;
 extern NSString *const ACKeychainIdentifier;
 extern NSString *const ACKeychainService;
+extern NSString *const ACKeychainExpirationDate;
 
 @interface ACSimpleKeychain : NSObject {
     
@@ -23,6 +24,7 @@ extern NSString *const ACKeychainService;
 // Creates new item with the provided values and deletes the old ones if those existed.
 // Returns YES on success and NO on failure.
 - (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier forService:(NSString *)service;
+- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service;
 
 
 // On success returns a dictionary with the following keys:
@@ -30,6 +32,7 @@ extern NSString *const ACKeychainService;
 //  ACKeychainPassword
 //  ACKeychainIdentifier
 //  ACKeychainService
+//  ACKeychainExpirationDate
 - (NSDictionary *)credentialsForIdentifier:(NSString *)identifier service:(NSString *)service;
 
 // On success returns a dictionary with the following keys:
@@ -37,6 +40,7 @@ extern NSString *const ACKeychainService;
 //  ACKeychainPassword
 //  ACKeychainIdentifier
 //  ACKeychainService
+//  ACKeychainExpirationDate
 - (NSDictionary *)credentialsForUsername:(NSString *)username service:(NSString *)service;
 
 // On success returns an array of dictionaries with the following keys:
@@ -44,6 +48,7 @@ extern NSString *const ACKeychainService;
 //  ACKeychainPassword
 //  ACKeychainIdentifier
 //  ACKeychainService
+//  ACKeychainExpirationDate
 //
 // limit - the amount of entries to return. Should be > 0
 - (NSArray *)allCredentialsForService:(NSString *)service limit:(NSUInteger)limit;

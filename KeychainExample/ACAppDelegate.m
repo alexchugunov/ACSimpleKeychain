@@ -69,11 +69,14 @@
     else {
         NSLog(@"No CREDENTIALS found for service 'twitter'");
         // Save credentials for user1
-        if ([keychain storePassword:@"password" username:@"user1" identifier:@"account1" forService:@"twitter"]) {
+        if ([keychain storePassword:nil username:@"user1" identifier:@"account1" forService:@"twitter"]) {
             NSLog(@"**SAVED credentials for username 'user1' credentials identifier 'account1'");
         }
         
-        if ([keychain storePassword:@"password" username:@"user4" identifier:@"account3" forService:@"MobileMe"]) {
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:360000000];
+        NSLog(@"%@", date);
+        
+        if ([keychain storePassword:@"password" username:@"user4" identifier:@"account3" expirationDate:date forService:@"MobileMe"]) {
             NSLog(@"**SAVED credentials for username 'user4' credentials identifier 'account3'");
         }
         
