@@ -2,10 +2,14 @@
 *.mode2v3
 *.pbxuser
 *.perspective 
+*.xcuserstate
 *.perspectivev3
 *.pyc 
+*.o
+*.d
 *~.nib/
 build/
+xcuserdata/
 
 .DS_Store
 profile
