@@ -82,12 +82,12 @@ NSString *const ACKeychainMisc              = @"misc";
     return credentials;
 }
 
-- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier forService:(NSString *)service
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier forService:(NSString *)service
 {
-    return [self storePassword:password username:username identifier:identifier expirationDate:nil forService:service];
+    return [self storeUsername:username password:password identifier:identifier expirationDate:nil forService:service];
 }
 
-- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service
 {
     if ([self deleteCredentialsForUsername:username service:service] &&
         [self deleteCredentialsForIdentifier:identifier service:service])

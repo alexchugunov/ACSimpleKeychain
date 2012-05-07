@@ -69,24 +69,24 @@
     else {
         NSLog(@"No CREDENTIALS found for service 'twitter'");
         // Save credentials for user1
-        if ([keychain storePassword:nil username:@"user1" identifier:@"account1" forService:@"twitter"]) {
+        if ([keychain storeUsername:@"user1" password:nil identifier:@"account1" forService:@"twitter"]) {
             NSLog(@"**SAVED credentials for username 'user1' credentials identifier 'account1'");
         }
         
         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:360000000];
         NSLog(@"%@", date);
         
-        if ([keychain storePassword:@"password" username:@"user4" identifier:@"account3" expirationDate:date forService:@"MobileMe"]) {
+        if ([keychain storeUsername:@"user4" password:@"password" identifier:@"account3" expirationDate:date forService:@"MobileMe"]) {
             NSLog(@"**SAVED credentials for username 'user4' credentials identifier 'account3'");
         }
         
         // Save credentials for user2
-        if ([keychain storePassword:@"password" username:@"user2" identifier:@"account2" forService:@"twitter"]) {
+        if ([keychain storeUsername:@"user2" password:@"password" identifier:@"account2" forService:@"twitter"]) {
             NSLog(@"**SAVED credentials for username 'user2' credentials identifier 'account2'");
         }
         
         // Replace user2 with user3
-        if ([keychain storePassword:@"password" username:@"user3" identifier:@"account2" forService:@"twitter"]) {
+        if ([keychain storeUsername:@"user3" password:@"password" identifier:@"account2" forService:@"twitter"]) {
             NSLog(@"**CHANGED credentials for credentials identifier 'account2'");
         }    
         

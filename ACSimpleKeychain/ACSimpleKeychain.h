@@ -23,8 +23,8 @@ extern NSString *const ACKeychainExpirationDate;
 
 // Creates new item with the provided values and deletes the old ones if those existed.
 // Returns YES on success and NO on failure.
-- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier forService:(NSString *)service;
-- (BOOL)storePassword:(NSString *)password username:(NSString *)username identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service;
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier forService:(NSString *)service;
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service;
 
 
 // On success returns a dictionary with the following keys:
