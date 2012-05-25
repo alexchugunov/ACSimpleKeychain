@@ -80,6 +80,14 @@
             NSLog(@"**SAVED credentials for username 'user4' credentials identifier 'account3'");
         }
         
+        if ([keychain storeUsername:@"user5" password:@"password" identifier:@"account4"
+                               info:[NSDictionary dictionaryWithObject:@"SomeRandomInfo"
+                                                                forKey:@"key1"]
+                         forService:@"MobileMe"])
+        {
+            NSLog(@"**SAVED credentials for username 'user5' credentials identifier 'account4'");
+        }
+        
         // Save credentials for user2
         if ([keychain storeUsername:@"user2" password:@"password" identifier:@"account2" forService:@"twitter"]) {
             NSLog(@"**SAVED credentials for username 'user2' credentials identifier 'account2'");

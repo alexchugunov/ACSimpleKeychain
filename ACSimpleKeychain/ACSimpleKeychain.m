@@ -13,8 +13,7 @@ NSString *const ACKeychainUsername          = @"username";
 NSString *const ACKeychainIdentifier        = @"identifier";
 NSString *const ACKeychainExpirationDate    = @"expirationDate";
 NSString *const ACKeychainService           = @"service";
-
-NSString *const ACKeychainMisc              = @"misc";
+NSString *const ACKeychainInfo              = @"info";
 
 @interface ACSimpleKeychain (Private)
 
@@ -68,7 +67,7 @@ NSString *const ACKeychainMisc              = @"misc";
     
     if (miscData) {
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:miscData];
-        misc = [unarchiver decodeObjectForKey:ACKeychainMisc];
+        misc = [unarchiver decodeObjectForKey:ACKeychainInfo];
         [unarchiver finishDecoding];
     }
     
@@ -77,6 +76,7 @@ NSString *const ACKeychainMisc              = @"misc";
                                         identifier, ACKeychainIdentifier,
                                         service, ACKeychainService, nil];
     [credentials setValue:password forKey:ACKeychainPassword];
+    [credentials setValue:misc forKey:ACKeychainInfo];
     [credentials setValue:[misc valueForKey:ACKeychainExpirationDate] forKey:ACKeychainExpirationDate];
 
     return credentials;
@@ -87,7 +87,7 @@ NSString *const ACKeychainMisc              = @"misc";
     return [self storeUsername:username password:password identifier:identifier expirationDate:nil forService:service];
 }
 
-- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier info:(NSDictionary *)info forService:(NSString *)service
 {
     if ([self deleteCredentialsForUsername:username service:service] &&
         [self deleteCredentialsForIdentifier:identifier service:service])
@@ -98,18 +98,26 @@ NSString *const ACKeychainMisc              = @"misc";
                                            [identifier dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrGeneric,
                                            [service dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrService, nil];
         [dictionary setValue:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
-        NSMutableDictionary *misc = [NSMutableDictionary dictionary];
-        [misc setValue:expirationDate forKey:ACKeychainExpirationDate];
-
         NSMutableData *miscData = [NSMutableData data];
         NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:miscData];
-        [archiver encodeObject:misc forKey:ACKeychainMisc];
+        [archiver encodeObject:info forKey:ACKeychainInfo];
         [archiver finishEncoding];
         [dictionary setValue:miscData forKey:(__bridge id)kSecAttrComment];
         OSStatus status = SecItemAdd((__bridge CFDictionaryRef)dictionary, NULL);
         return (status == errSecSuccess);
     }
     return NO;
+}
+
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service
+{
+    NSDictionary *info = nil;
+    if (expirationDate) {
+        info = [NSDictionary dictionaryWithObject:expirationDate
+                                           forKey:ACKeychainExpirationDate];
+    }
+    
+    return [self storeUsername:username password:password identifier:identifier info:info forService:service];
 }
 
 - (NSDictionary *)credentialsForIdentifier:(NSString *)identifier service:(NSString *)service

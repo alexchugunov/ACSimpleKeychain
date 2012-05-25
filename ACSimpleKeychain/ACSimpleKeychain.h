@@ -14,6 +14,7 @@ extern NSString *const ACKeychainUsername;
 extern NSString *const ACKeychainIdentifier;
 extern NSString *const ACKeychainService;
 extern NSString *const ACKeychainExpirationDate;
+extern NSString *const ACKeychainInfo;
 
 @interface ACSimpleKeychain : NSObject {
     
@@ -24,6 +25,8 @@ extern NSString *const ACKeychainExpirationDate;
 // Creates new item with the provided values and deletes the old ones if those existed.
 // Returns YES on success and NO on failure.
 - (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier forService:(NSString *)service;
+- (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier info:(NSDictionary *)info forService:(NSString *)service;
+
 - (BOOL)storeUsername:(NSString *)username password:(NSString *)password identifier:(NSString *)identifier expirationDate:(NSDate *)expirationDate forService:(NSString *)service;
 
 
