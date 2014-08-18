@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Eatlime Inc. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface KeychainExampleTests : SenTestCase
+@interface KeychainExampleTests : XCTestCase
 
 @end
