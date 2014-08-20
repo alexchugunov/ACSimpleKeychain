@@ -151,7 +151,7 @@ NSString *const ACKeychainInfo              = @"info";
                            (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
                            [service dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrService,
                            (__bridge id)kCFBooleanTrue, (__bridge id)kSecReturnAttributes,
-                           [NSNumber numberWithInt:limit], (__bridge id)kSecMatchLimit,
+                           [NSNumber numberWithUnsignedInteger:limit], (__bridge id)kSecMatchLimit,
                            (__bridge id)kCFBooleanTrue, (__bridge id)kSecReturnData,
                            nil];
     
